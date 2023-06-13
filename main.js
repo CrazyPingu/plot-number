@@ -1,4 +1,7 @@
 window.onload = function () {
+
+  const LIMIT_NUMBER = 10000;
+
   const graph = document.getElementById('graph');
   const origin = { x: graph.offsetWidth / 2, y: graph.offsetHeight / 2 };
   let zoomLevel = 1;
@@ -79,7 +82,7 @@ window.onload = function () {
 
   graph.addEventListener('touchmove', handlePinch, { passive: false });
 
-  var primes = generatePrimes(10000);
+  var primes = generatePrimes(LIMIT_NUMBER);
   for (let i = 0; i < primes.length; ++i) {
     plotPoint(primes[i], primes[i]);
   }
