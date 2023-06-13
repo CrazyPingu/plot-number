@@ -1,0 +1,46 @@
+* {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#graph {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border: 1px solid black;
+}
+
+#xAxis, #yAxis {
+  position: absolute;
+  background: black;
+}
+
+#xAxis {
+  height: 1px;
+  width: 100%;
+  top: 50%;
+  min-width: 100%;
+}
+
+#yAxis {
+  width: 1px;
+  height: 100%;
+  left: 50%;
+  min-height: 100%;
+}
+
+.dot {
+  position: absolute;
+  height: 5px;
+  width: 5px;
+  background: red;
+}
