@@ -33,6 +33,7 @@ window.onload = function () {
   }
 
   function handleZoom(event) {
+    event.preventDefault(); // Prevent default browser zoom behavior
     const delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
     if (delta > 0) {
       zoomLevel *= 1.2; // Increase zoom
@@ -45,8 +46,38 @@ window.onload = function () {
     }
   }
 
-  graph.addEventListener('mousewheel', handleZoom); // For modern browsers
-  graph.addEventListener('DOMMouseScroll', handleZoom); // For older Firefox
+  function handlePinch(event) {
+    event.preventDefault(); // Prevent default pinch zoom behavior
+    if (event.touches.length >= 2) {
+      const touch1 = event.touches[0];
+      const touch2 = event.touches[1];
+      const distance = Math.hypot(touch2.clientX - touch1.clientX, touch2.clientY - touch1.clientY);
+      if (typeof lastDistance !== 'undefined') {
+        if (distance > lastDistance) {
+          zoomLevel *= 1.2; // Increase zoom
+        } else if (distance < lastDistance) {
+          zoomLevel /= 1.2; // Decrease zoom
+        }
+        graph.innerHTML = '<div id="xAxis"></div><div id="yAxis"></div>'; // Clear existing points
+        for (let i = 0; i < primes.length; ++i) {
+          plotPoint(primes[i], primes[i]);
+        }
+      }
+      lastDistance = distance;
+    }
+  }
+
+  graph.addEventListener('wheel', handleZoom, { passive: false }); // For modern desktop browsers
+  graph.addEventListener('mousewheel', handleZoom, { passive: false }); // For older desktop browsers
+  graph.addEventListener('DOMMouseScroll', handleZoom, { passive: false }); // For Firefox
+
+  graph.addEventListener('touchstart', function (event) {
+    if (event.touches.length >= 2) {
+      lastDistance = Math.hypot(event.touches[1].clientX - event.touches[0].clientX, event.touches[1].clientY - event.touches[0].clientY);
+    }
+  });
+
+  graph.addEventListener('touchmove', handlePinch, { passive: false });
 
   var primes = generatePrimes(10000);
   for (let i = 0; i < primes.length; ++i) {
